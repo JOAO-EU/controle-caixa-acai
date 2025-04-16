@@ -31,43 +31,21 @@ st.markdown("""
 import streamlit as st
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
-import json
-
-try:
-    # Acesse as credenciais armazenadas no Secrets do Streamlit Cloud
-    creds = json.loads(st.secrets["google"]["credentials"])
-
-    # Defina o escopo de acesso ao Google Sheets
-    SCOPE = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-
-    # Crie as credenciais a partir dos dados do Secrets
-    CREDS = ServiceAccountCredentials.from_json_keyfile_dict(creds, SCOPE)
-
-    # Autenticação com o Google Sheets
-    CLIENT = gspread.authorize(CREDS)
-
-    SHEET_NAME = "Fluxo de Caixa Acai"
-    SHEET = CLIENT.open(SHEET_NAME)
-    ENTRADAS = SHEET.worksheet("Entradas")
-    SAIDAS = SHEET.worksheet("Saidas")
-    
-    st.success("Conexão bem-sucedida com o Google Sheets!")
-
-except Exception as e:
-    st.error(f"Ocorreu um erro ao tentar autenticar: {e}")
-
-import streamlit as st
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
 import pandas as pd
 from datetime import datetime
+import json
+
+# --- CONFIGURAÇÕES INICIAIS ---
+st.set_page_config(page_title="Açaí Bom Sabor", layout="centered")
+st.title("🍇 Fluxo de Caixa - Açaí Bom Sabor")
 
 # --- CONEXÃO COM GOOGLE SHEETS ---
 SCOPE = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 
-# Verificação de conexão com a planilha
+# Carregar credenciais do Secrets do Streamlit
 try:
-    creds = ServiceAccountCredentials.from_json_keyfile_name("credentials.json", SCOPE)
+    creds = json.loads(st.secrets["google"]["credentials"])  # Leitura do JSON no segredo
+    creds = ServiceAccountCredentials.from_json_keyfile_dict(creds, SCOPE)
     client = gspread.authorize(creds)
     st.write("Conectado com sucesso ao Google Sheets!")
 except Exception as e:
@@ -87,18 +65,31 @@ try:
     st.write("Abas disponíveis na planilha:", [worksheet.title for worksheet in worksheet_list])
 except Exception as e:
     st.error(f"Erro ao verificar abas da planilha: {e}")
-# Tente acessar a aba 'Entradas'
+
+# --- AÇÔES NA PLANILHA ---
 try:
     entradas = sheet.worksheet("Entradas")
     st.write("Aba 'Entradas' carregada com sucesso!")
 except Exception as e:
     st.error(f"Erro ao acessar a aba 'Entradas': {e}")
-# Obter registros da aba 'Entradas'
+
+# --- ADICIONAR ENTRADA ---
+data = datetime.now().strftime("%d/%m/%Y")
+item = "AÇAÍ DE 5"  # Apenas exemplo, use a variável do seu selectbox
+valor = 5  # Exemplo de valor, substitua pelo valor selecionado
+try:
+    entradas.append_row([data, item, valor])
+    st.success("Entrada registrada com sucesso!")
+except Exception as e:
+    st.error(f"Erro ao adicionar entrada: {e}")
+
+# --- OBTER REGISTROS DA ABA 'ENTRADAS' ---
 try:
     df_entradas = pd.DataFrame(entradas.get_all_records())
     st.write("Dados da aba 'Entradas':", df_entradas.head())  # Exibe os primeiros registros da aba
 except Exception as e:
     st.error(f"Erro ao obter registros da aba 'Entradas': {e}")
+
 
 
 # --- TABELA DE PRODUTOS ---
