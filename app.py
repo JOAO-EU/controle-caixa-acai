@@ -28,17 +28,28 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# --- CONEXÃO COM GOOGLE SHEETS ---
+import streamlit as st
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+import json
+
+# Acesse as credenciais armazenadas no Secrets do Streamlit Cloud
+creds = json.loads(st.secrets["google"]["credentials"])
+
+# Defina o escopo de acesso ao Google Sheets
 SCOPE = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 
-# Verifique se o arquivo 'credentials.json' está no mesmo diretório que o app.py ou forneça o caminho correto
-CREDS = ServiceAccountCredentials.from_json_keyfile_name("credentials.json", SCOPE)  # ou "config/credentials.json"
+# Crie as credenciais a partir dos dados do Secrets
+CREDS = ServiceAccountCredentials.from_json_keyfile_dict(creds, SCOPE)
+
+# Autenticação com o Google Sheets
 CLIENT = gspread.authorize(CREDS)
 
 SHEET_NAME = "Fluxo de Caixa Acai"
 SHEET = CLIENT.open(SHEET_NAME)
 ENTRADAS = SHEET.worksheet("Entradas")
 SAIDAS = SHEET.worksheet("Saidas")
+
 
 
 # --- TABELA DE PRODUTOS ---
