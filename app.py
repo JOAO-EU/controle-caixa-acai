@@ -93,6 +93,12 @@ try:
     st.write("Aba 'Entradas' carregada com sucesso!")
 except Exception as e:
     st.error(f"Erro ao acessar a aba 'Entradas': {e}")
+# Obter registros da aba 'Entradas'
+try:
+    df_entradas = pd.DataFrame(entradas.get_all_records())
+    st.write("Dados da aba 'Entradas':", df_entradas.head())  # Exibe os primeiros registros da aba
+except Exception as e:
+    st.error(f"Erro ao obter registros da aba 'Entradas': {e}")
 
 
 # --- TABELA DE PRODUTOS ---
