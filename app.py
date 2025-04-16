@@ -87,6 +87,12 @@ try:
     st.write("Abas disponíveis na planilha:", [worksheet.title for worksheet in worksheet_list])
 except Exception as e:
     st.error(f"Erro ao verificar abas da planilha: {e}")
+# Tente acessar a aba 'Entradas'
+try:
+    entradas = sheet.worksheet("Entradas")
+    st.write("Aba 'Entradas' carregada com sucesso!")
+except Exception as e:
+    st.error(f"Erro ao acessar a aba 'Entradas': {e}")
 
 
 # --- TABELA DE PRODUTOS ---
