@@ -33,22 +33,29 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import json
 
-# Acesse as credenciais armazenadas no Secrets do Streamlit Cloud
-creds = json.loads(st.secrets["google"]["credentials"])
+try:
+    # Acesse as credenciais armazenadas no Secrets do Streamlit Cloud
+    creds = json.loads(st.secrets["google"]["credentials"])
 
-# Defina o escopo de acesso ao Google Sheets
-SCOPE = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+    # Defina o escopo de acesso ao Google Sheets
+    SCOPE = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
 
-# Crie as credenciais a partir dos dados do Secrets
-CREDS = ServiceAccountCredentials.from_json_keyfile_dict(creds, SCOPE)
+    # Crie as credenciais a partir dos dados do Secrets
+    CREDS = ServiceAccountCredentials.from_json_keyfile_dict(creds, SCOPE)
 
-# Autenticação com o Google Sheets
-CLIENT = gspread.authorize(CREDS)
+    # Autenticação com o Google Sheets
+    CLIENT = gspread.authorize(CREDS)
 
-SHEET_NAME = "Fluxo de Caixa Acai"
-SHEET = CLIENT.open(SHEET_NAME)
-ENTRADAS = SHEET.worksheet("Entradas")
-SAIDAS = SHEET.worksheet("Saidas")
+    SHEET_NAME = "Fluxo de Caixa Acai"
+    SHEET = CLIENT.open(SHEET_NAME)
+    ENTRADAS = SHEET.worksheet("Entradas")
+    SAIDAS = SHEET.worksheet("Saidas")
+    
+    st.success("Conexão bem-sucedida com o Google Sheets!")
+
+except Exception as e:
+    st.error(f"Ocorreu um erro ao tentar autenticar: {e}")
+
 
 # --- TABELA DE PRODUTOS ---
 produtos = {
