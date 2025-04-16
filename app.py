@@ -8,6 +8,8 @@ import json
 
 # --- CONFIGURAÇÕES INICIAIS ---
 st.set_page_config(page_title="Açaí Bom Sabor", layout="centered")  # Deve ser a primeira linha de código
+
+# --- TÍTULO DA PÁGINA ---
 st.title("🍇 Fluxo de Caixa - Açaí Bom Sabor")
 
 # Cores do tema
@@ -24,17 +26,6 @@ st.markdown("""
     }
     </style>
     """, unsafe_allow_html=True)
-
-import streamlit as st
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
-import pandas as pd
-from datetime import datetime
-import json
-
-# --- CONFIGURAÇÕES INICIAIS ---
-st.set_page_config(page_title="Açaí Bom Sabor", layout="centered")  # Deve ser a primeira linha de código
-st.title("🍇 Fluxo de Caixa - Açaí Bom Sabor")
 
 # --- CONEXÃO COM GOOGLE SHEETS ---
 SCOPE = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
@@ -79,8 +70,6 @@ try:
     st.write("Dados da aba 'Entradas' da nova planilha:", df_entradas_2.head())  # Exibe os primeiros registros
 except Exception as e:
     st.error(f"Erro ao obter registros da aba 'Entradas' da nova planilha: {e}")
-
-
 
 # --- TABELA DE PRODUTOS ---
 produtos = {
