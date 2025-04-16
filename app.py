@@ -50,8 +50,6 @@ SHEET = CLIENT.open(SHEET_NAME)
 ENTRADAS = SHEET.worksheet("Entradas")
 SAIDAS = SHEET.worksheet("Saidas")
 
-
-
 # --- TABELA DE PRODUTOS ---
 produtos = {
     "AÇAÍ DE 5": 5,
