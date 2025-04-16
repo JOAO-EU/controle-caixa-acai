@@ -1,4 +1,4 @@
-
+# app.py - Aplicativo de fluxo de caixa "Açaí Bom Sabor"
 import streamlit as st
 import pandas as pd
 import gspread
@@ -11,7 +11,7 @@ import io
 
 # --- CONFIGURAÇÕES INICIAIS ---
 st.set_page_config(page_title="Açaí Bom Sabor", layout="centered")
-st.markdown("<h1 style='text-align: center;'>🍧 Fluxo de Caixa - Açaí Bom Sabor</h1>", unsafe_allow_html=True)
+st.title("🍇 Fluxo de Caixa - Açaí Bom Sabor")
 
 # Cores do tema
 st.markdown("""
@@ -26,11 +26,11 @@ st.markdown("""
         padding: 20px;
     }
     </style>
-""", unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
 
 # --- CONEXÃO COM GOOGLE SHEETS ---
 SCOPE = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
-CREDS = ServiceAccountCredentials.from_json_keyfile_name("config/credentials.json", SCOPE)
+CREDS = ServiceAccountCredentials.from_json_keyfile_name("credentials.json", SCOPE)
 CLIENT = gspread.authorize(CREDS)
 
 SHEET_NAME = "Fluxo de Caixa Acai"
@@ -110,6 +110,7 @@ if not df_entradas.empty:
     fig2 = px.bar(saidas_mes, x='Mês', y='Valor', title="Saídas Mensais", color_discrete_sequence=['#F39C12'])
     st.plotly_chart(fig2)
 
+    # Exportar PDF
     st.subheader("🔗 Exportar Relatório em PDF")
     if st.button("Gerar PDF"):
         pdf = FPDF()
@@ -118,13 +119,11 @@ if not df_entradas.empty:
         pdf.cell(200, 10, txt="Relatório - Açaí Bom Sabor", ln=True, align='C')
         pdf.cell(200, 10, txt=f"Saldo Atual: R$ {saldo:.2f}", ln=True)
 
-        pdf.cell(200, 10, txt="
-Entradas:", ln=True)
+        pdf.cell(200, 10, txt="Entradas:", ln=True)
         for i, row in df_entradas.iterrows():
             pdf.cell(200, 8, txt=f"{row['Data'].strftime('%d/%m/%Y')} - {row['Produto']} - R$ {row['Valor']:.2f}", ln=True)
 
-        pdf.cell(200, 10, txt="
-Saídas:", ln=True)
+        pdf.cell(200, 10, txt="Saídas:", ln=True)
         for i, row in df_saidas.iterrows():
             pdf.cell(200, 8, txt=f"{row['Data'].strftime('%d/%m/%Y')} - {row['Descrição']} - R$ {row['Valor']:.2f}", ln=True)
 
