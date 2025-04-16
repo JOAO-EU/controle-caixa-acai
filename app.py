@@ -1,16 +1,13 @@
 # app.py - Aplicativo de fluxo de caixa "Açaí Bom Sabor"
 import streamlit as st
-import pandas as pd
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
+import pandas as pd
 from datetime import datetime
-import plotly.express as px
-from fpdf import FPDF
-import base64
-import io
+import json
 
 # --- CONFIGURAÇÕES INICIAIS ---
-st.set_page_config(page_title="Açaí Bom Sabor", layout="centered")
+st.set_page_config(page_title="Açaí Bom Sabor", layout="centered")  # Deve ser a primeira linha de código
 st.title("🍇 Fluxo de Caixa - Açaí Bom Sabor")
 
 # Cores do tema
@@ -27,17 +24,6 @@ st.markdown("""
     }
     </style>
     """, unsafe_allow_html=True)
-
-import streamlit as st
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
-import pandas as pd
-from datetime import datetime
-import json
-
-# --- CONFIGURAÇÕES INICIAIS ---
-st.set_page_config(page_title="Açaí Bom Sabor", layout="centered")
-st.title("🍇 Fluxo de Caixa - Açaí Bom Sabor")
 
 # --- CONEXÃO COM GOOGLE SHEETS ---
 SCOPE = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
@@ -89,7 +75,6 @@ try:
     st.write("Dados da aba 'Entradas':", df_entradas.head())  # Exibe os primeiros registros da aba
 except Exception as e:
     st.error(f"Erro ao obter registros da aba 'Entradas': {e}")
-
 
 
 # --- TABELA DE PRODUTOS ---
