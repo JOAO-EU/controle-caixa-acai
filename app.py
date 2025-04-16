@@ -56,6 +56,38 @@ try:
 except Exception as e:
     st.error(f"Ocorreu um erro ao tentar autenticar: {e}")
 
+import streamlit as st
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+import pandas as pd
+from datetime import datetime
+
+# --- CONEXÃO COM GOOGLE SHEETS ---
+SCOPE = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
+
+# Verificação de conexão com a planilha
+try:
+    creds = ServiceAccountCredentials.from_json_keyfile_name("credentials.json", SCOPE)
+    client = gspread.authorize(creds)
+    st.write("Conectado com sucesso ao Google Sheets!")
+except Exception as e:
+    st.error(f"Erro ao conectar ao Google Sheets: {e}")
+
+# Tente abrir a planilha "Fluxo de Caixa Acai"
+sheet_name = "Fluxo de Caixa Acai"
+try:
+    sheet = client.open(sheet_name)
+    st.write(f"Conectado com a planilha: {sheet_name}")
+except Exception as e:
+    st.error(f"Erro ao abrir a planilha: {e}")
+
+# Verificando as abas disponíveis na planilha
+try:
+    worksheet_list = sheet.worksheets()
+    st.write("Abas disponíveis na planilha:", [worksheet.title for worksheet in worksheet_list])
+except Exception as e:
+    st.error(f"Erro ao verificar abas da planilha: {e}")
+
 
 # --- TABELA DE PRODUTOS ---
 produtos = {
