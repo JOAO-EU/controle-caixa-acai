@@ -38,14 +38,25 @@ try:
     st.write("Conectado com sucesso ao Google Sheets!")
 except Exception as e:
     st.error(f"Erro ao conectar ao Google Sheets: {e}")
+    client = None  # Garantir que a variável client não será usada sem sucesso na autenticação
 
-# Abrir a planilha existente (Fluxo de Caixa Acai) e nova planilha
+# Se client for None, não prosseguir
+if client is None:
+    st.stop()
+
+# --- ABRIR PLANILHA ---
 try:
+    # Abrir a planilha existente (Fluxo de Caixa Acai) e nova planilha
     sheet_1 = client.open("Fluxo de Caixa Acai")  # Planilha existente
     sheet_2 = client.open("Fluxo de Caixa Açaí 2")  # Nova planilha
     st.write(f"Conectado com as planilhas: Fluxo de Caixa Acai e Fluxo de Caixa Açaí 2")
 except Exception as e:
     st.error(f"Erro ao abrir a planilha: {e}")
+    sheet_1 = sheet_2 = None  # Garantir que as planilhas não serão usadas sem sucesso na conexão
+
+# Se as planilhas não foram abertas, não prosseguir
+if sheet_1 is None or sheet_2 is None:
+    st.stop()
 
 # --- ABAS DA NOVA PLANILHA ---
 try:
@@ -53,6 +64,11 @@ try:
     st.write("Aba 'Entradas' da nova planilha carregada com sucesso!")
 except Exception as e:
     st.error(f"Erro ao acessar a aba 'Entradas' da nova planilha: {e}")
+    entradas_2 = None  # Garantir que a variável entradas_2 não será usada sem sucesso na conexão
+
+# Se a aba não foi carregada, não prosseguir
+if entradas_2 is None:
+    st.stop()
 
 # --- ADICIONAR ENTRADA NA NOVA PLANILHA ---
 data = datetime.now().strftime("%d/%m/%Y")
